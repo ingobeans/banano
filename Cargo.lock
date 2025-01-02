@@ -30,9 +30,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "cool-rust-input"
-version = "5.0.2"
+version = "6.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55408133cf044a5e08ca006f46b6c698d4bfa7a090bb9660ea9c92684758276f"
+checksum = "9167e6837b6a16df548b2a4e3dbc2016bb8b5aa91765471da64fd60da937efdf"
 dependencies = [
  "crossterm",
 ]
