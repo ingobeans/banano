@@ -1,0 +1,8 @@
+[package]
+name = "banano"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cool-rust-input = "5.0.2"
+crossterm = "0.28.1"
