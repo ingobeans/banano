@@ -10,10 +10,14 @@ use crossterm::{
     queue,
     style::{Color, SetForegroundColor},
 };
+use dialoguer::{Confirm, Input};
 use std::env;
 use std::fs;
-use std::io::stdout;
+use std::io::{stdin, stdout, Write};
 
+fn save_file(filename: &str, text: &str) {
+    fs::write(filename, text).expect("Unable to write new contents.");
+}
 pub struct FileEditorInput {
     pub filename: String,
     original_text: String,
@@ -39,8 +43,7 @@ impl CustomInputHandler for FileEditorInput {
                             return KeyPressResult::Stop;
                         }
                         if c == 's' {
-                            fs::write(&self.filename, &ctx.text_data.text)
-                                .expect("Unable to write new contents.");
+                            save_file(&self.filename, &ctx.text_data.text);
                             self.is_new = false;
                             self.original_text = ctx.text_data.text.to_owned();
                             return KeyPressResult::Handled;
@@ -127,5 +130,11 @@ fn main() -> Result<(), std::io::Error> {
     );
     cool_input.text_data.text = text;
     cool_input.listen()?;
+    if cool_input.custom_input.original_text != cool_input.text_data.text {
+        let save = Confirm::new().with_prompt("Save file?").interact().unwrap();
+        if save {
+            save_file(&filename, &cool_input.text_data.text);
+        }
+    }
     Ok(())
 }

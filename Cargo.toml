@@ -1,8 +1,9 @@
 [package]
 name = "banano"
-version = "0.2.2"
+version = "0.3.2"
 edition = "2021"
 
 [dependencies]
 cool-rust-input = "6.1.0"
 crossterm = "0.28.1"
+dialoguer = "0.11.0"
