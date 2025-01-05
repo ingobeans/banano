@@ -13,7 +13,7 @@ use crossterm::{
 use dialoguer::Confirm;
 use std::env;
 use std::fs;
-use std::io::{stdout, Write};
+use std::io::stdout;
 
 fn save_file(filename: &str, text: &str) {
     fs::write(filename, text).expect("Unable to write new contents.");
