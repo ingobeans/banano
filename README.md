@@ -1,5 +1,5 @@
 # banano
-![image](https://github.com/user-attachments/assets/239f8eba-f0c7-429c-9e86-c7da6622af59)
+![banano](https://github.com/user-attachments/assets/4af7df3b-c9a2-42a1-90a0-dba30bdc9c8e)
 
 banano is a file editor inspired by nano, written in rust.
 
