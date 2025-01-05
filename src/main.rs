@@ -10,7 +10,6 @@ use crossterm::{
     queue,
     style::{Color, SetForegroundColor},
 };
-use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io::stdout;
@@ -91,7 +90,7 @@ impl CustomInputHandler for FileEditorInput {
                 SetForegroundColor(Color::Black),
                 SetBackgroundColor(Color::White)
             );
-            let _ = set_terminal_line(&keybind, offset, bottom_text_position, false);
+            let _ = set_terminal_line(keybind, offset, bottom_text_position, false);
             offset += keybind.chars().count() + 1;
             let _ = queue!(stdout(), ResetColor);
             let _ = set_terminal_line(&description, offset, bottom_text_position, false);
