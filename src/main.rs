@@ -10,10 +10,10 @@ use crossterm::{
     queue,
     style::{Color, SetForegroundColor},
 };
-use dialoguer::{Confirm, Input};
+use dialoguer::Confirm;
 use std::env;
 use std::fs;
-use std::io::{stdin, stdout, Write};
+use std::io::{stdout, Write};
 
 fn save_file(filename: &str, text: &str) {
     fs::write(filename, text).expect("Unable to write new contents.");
@@ -133,7 +133,7 @@ fn main() -> Result<(), std::io::Error> {
     if cool_input.custom_input.original_text != cool_input.text_data.text {
         let save = Confirm::new().with_prompt("Save file?").interact().unwrap();
         if save {
-            save_file(&filename, &cool_input.text_data.text);
+            save_file(filename, &cool_input.text_data.text);
         }
     }
     Ok(())
