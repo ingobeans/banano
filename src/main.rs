@@ -10,6 +10,7 @@ use crossterm::{
     queue,
     style::{Color, SetForegroundColor},
 };
+use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io::stdout;
@@ -60,7 +61,6 @@ impl CustomInputHandler for FileEditorInput {
         let left_text = format!("BANANO v{}", env!("CARGO_PKG_VERSION"));
         let center_text = format!("FILE: '{}'", self.filename);
         let mut right_text = "NOT MODIFIED";
-        let bottom_text = "^S Save File  ^C Exit";
 
         if self.original_text != ctx.text_data.text {
             right_text = "MODIFIED";
@@ -81,8 +81,22 @@ impl CustomInputHandler for FileEditorInput {
         );
         let _ = set_terminal_line(right_text, width as usize - right_text.len(), 0, false);
 
-        let _ = queue!(stdout(), ResetColor);
-        let _ = set_terminal_line(bottom_text, 0, bottom_text_position, true);
+        let keybinds = ["^S".to_string(), "^C".to_string()];
+        let descriptions = ["Save File".to_string(), "Exit".to_string()];
+
+        let mut offset = 0;
+        for (keybind, description) in keybinds.iter().zip(descriptions) {
+            let _ = queue!(
+                stdout(),
+                SetForegroundColor(Color::Black),
+                SetBackgroundColor(Color::White)
+            );
+            let _ = set_terminal_line(&keybind, offset, bottom_text_position, false);
+            offset += keybind.chars().count() + 1;
+            let _ = queue!(stdout(), ResetColor);
+            let _ = set_terminal_line(&description, offset, bottom_text_position, false);
+            offset += description.chars().count() + 1;
+        }
     }
     fn get_input_transform(&mut self, ctx: HandlerContext) -> InputTransform {
         let size = (ctx.terminal_size.0, ctx.terminal_size.1 - 3);
