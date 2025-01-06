@@ -1,6 +1,6 @@
 [package]
 name = "banano"
-version = "0.4.3"
+version = "0.4.4"
 edition = "2021"
 
 [dependencies]
@@ -11,4 +11,3 @@ crossterm = "0.28.1"
 strip = true
 opt-level = "z"
 lto = true
-codegen-units = 1
