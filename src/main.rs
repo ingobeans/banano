@@ -4,6 +4,7 @@ use cool_rust_input::{
     set_terminal_line, CoolInput, CustomInputHandler, HandlerContext, InputTransform,
     KeyPressResult,
 };
+use crossterm::cursor;
 use crossterm::event::{Event, KeyCode, KeyEventKind, KeyModifiers};
 use crossterm::style::{ResetColor, SetBackgroundColor};
 use crossterm::{
@@ -134,6 +135,9 @@ impl CustomInputHandler for ConfirmationInputHandler {
             offset: (prompt_offset, 0),
         }
     }
+    fn after_update_cursor(&mut self, _: HandlerContext) {
+        let _ = queue!(stdout(), cursor::Hide);
+    }
     fn after_draw_text(&mut self, _: HandlerContext) {
         let _ = set_terminal_line(&self.prompt, 0, 0, false);
     }
@@ -175,7 +179,7 @@ fn main() -> Result<(), std::io::Error> {
     cool_input.text_data.text = text;
     cool_input.listen()?;
     if cool_input.custom_input.original_text != cool_input.text_data.text {
-        let save = ConfirmationInputHandler::prompt("Save file?").unwrap();
+        let save = ConfirmationInputHandler::prompt("Save file? [y/n]").unwrap();
         if save {
             save_file(filename, &cool_input.text_data.text);
         }

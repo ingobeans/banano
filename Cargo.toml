@@ -4,5 +4,5 @@ version = "0.4.0"
 edition = "2021"
 
 [dependencies]
-cool-rust-input = "6.1.0"
+cool-rust-input = "6.2.0"
 crossterm = "0.28.1"
