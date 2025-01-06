@@ -4,13 +4,12 @@ use cool_rust_input::{
     set_terminal_line, CoolInput, CustomInputHandler, HandlerContext, InputTransform,
     KeyPressResult,
 };
-use crossterm::event::{Event, KeyCode, KeyModifiers};
+use crossterm::event::{Event, KeyCode, KeyEventKind, KeyModifiers};
 use crossterm::style::{ResetColor, SetBackgroundColor};
 use crossterm::{
     queue,
     style::{Color, SetForegroundColor},
 };
-use dialoguer::Confirm;
 use std::env;
 use std::fs;
 use std::io::stdout;
@@ -111,6 +110,51 @@ pub fn path_exists(path: &str) -> bool {
     fs::metadata(path).is_ok()
 }
 
+/// A simple Y/N prompt input handler. Automatically stops on first keypress, no enter required.
+pub struct ConfirmationInputHandler {
+    pub prompt: String,
+    pub value: bool,
+}
+impl ConfirmationInputHandler {
+    pub fn prompt(prompt: &str) -> Result<bool, std::io::Error> {
+        let handler = ConfirmationInputHandler {
+            prompt: prompt.to_string(),
+            value: false,
+        };
+        let mut input = CoolInput::new(handler, 0);
+        input.listen()?;
+        Ok(input.custom_input.value)
+    }
+}
+impl CustomInputHandler for ConfirmationInputHandler {
+    fn get_input_transform(&mut self, ctx: HandlerContext) -> InputTransform {
+        let prompt_offset = self.prompt.chars().count() as u16;
+        InputTransform {
+            size: (ctx.terminal_size.0 - prompt_offset, ctx.terminal_size.1),
+            offset: (prompt_offset, 0),
+        }
+    }
+    fn after_draw_text(&mut self, _: HandlerContext) {
+        let _ = set_terminal_line(&self.prompt, 0, 0, false);
+    }
+    fn handle_key_press(&mut self, key: &Event, _: HandlerContext) -> KeyPressResult {
+        if let Event::Key(key_event) = key {
+            if key_event.kind == KeyEventKind::Press {
+                // Make CTRL + C stop
+                if let KeyCode::Char(c) = key_event.code {
+                    if c == 'c' && key_event.modifiers.contains(KeyModifiers::CONTROL) {
+                        return KeyPressResult::Stop;
+                    } else if c == 'y' || c == 'n' {
+                        self.value = c == 'y';
+                        return KeyPressResult::Stop;
+                    }
+                }
+            }
+        }
+        KeyPressResult::Handled
+    }
+}
+
 fn main() -> Result<(), std::io::Error> {
     let args: Vec<_> = env::args().collect();
     if args.len() != 2 {
@@ -131,7 +175,7 @@ fn main() -> Result<(), std::io::Error> {
     cool_input.text_data.text = text;
     cool_input.listen()?;
     if cool_input.custom_input.original_text != cool_input.text_data.text {
-        let save = Confirm::new().with_prompt("Save file?").interact().unwrap();
+        let save = ConfirmationInputHandler::prompt("Save file?").unwrap();
         if save {
             save_file(filename, &cool_input.text_data.text);
         }
