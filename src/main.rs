@@ -38,9 +38,11 @@ impl CustomInputHandler for FileEditorInput {
             if key_event.kind == crossterm::event::KeyEventKind::Press {
                 if let KeyCode::Char(c) = key_event.code {
                     if key_event.modifiers.contains(KeyModifiers::CONTROL) {
+                        // exit on CTRL + C
                         if c == 'c' {
                             return KeyPressResult::Stop;
                         }
+                        // save on CTRL + S
                         if c == 's' {
                             save_file(&self.filename, &ctx.text_data.text);
                             self.is_new = false;
