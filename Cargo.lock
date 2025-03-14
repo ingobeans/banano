@@ -10,7 +10,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "banano"
-version = "0.4.4"
+version = "0.4.5"
 dependencies = [
  "cool-rust-input",
  "crossterm",
@@ -30,9 +30,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "cool-rust-input"
-version = "6.2.0"
+version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18f1b07f529ed8bb70c47b3655b2619ee51da2a8b32dd2932c6d4819d62b769e"
+checksum = "c8b5f1ea0d695749cd2a00366dba7d21abf2dbc2cf642c3d64666ddef616ec0f"
 dependencies = [
  "crossterm",
 ]
